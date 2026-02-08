@@ -12,6 +12,8 @@ body {
   color: #e0e0e0;
   line-height: 1.5;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 a {
@@ -56,6 +58,8 @@ main {
   max-width: 1400px;
   margin: 0 auto;
   padding: 2rem;
+  flex: 1;
+  width: 100%;
 }
 
 footer {
@@ -95,6 +99,18 @@ h1 {
 .filter-search:focus {
   outline: none;
   border-color: #8ab4f8;
+}
+
+/* Day sections */
+.day-heading {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #888;
+  margin-bottom: 0.75rem;
+}
+
+.day-section {
+  margin-bottom: 2rem;
 }
 
 /* Gallery grid */
@@ -146,7 +162,6 @@ h1 {
 }
 
 .frame-meta {
-  margin-bottom: 1.5rem;
   line-height: 1.8;
 }
 
@@ -162,7 +177,6 @@ h1 {
 
 .frame-meta dd {
   display: inline;
-  margin-right: 1.5rem;
 }
 
 .frame-meta dd::after {
@@ -170,13 +184,69 @@ h1 {
   display: block;
 }
 
-.alt-text {
+.frame-meta dd.alt-text {
   background: #1a1a1a;
   border-left: 3px solid #444;
   padding: 0.75rem 1rem;
   font-style: italic;
   color: #aaa;
-  margin-top: 1rem;
+  display: block;
+  margin-top: 0.25rem;
+}
+
+/* Year sections (show taxonomy) */
+.year-section {
+  margin-bottom: 1rem;
+}
+
+.year-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.year-heading:hover {
+  background: #222;
+}
+
+.year-count {
+  color: #666;
+  font-size: 0.85rem;
+  font-weight: 400;
+}
+
+.year-toggle {
+  margin-left: auto;
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid #888;
+  transition: transform 0.2s;
+}
+
+.year-heading[aria-expanded="true"] .year-toggle {
+  transform: rotate(180deg);
+}
+
+.year-episodes {
+  display: none;
+  padding-top: 1rem;
+}
+
+.year-episodes.open {
+  display: block;
 }
 
 /* Terms list */

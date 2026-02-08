@@ -1,6 +1,7 @@
 baseURL: ""
 title: "Wrestling Frames"
+buildFuture: true
 taxonomies:
   show: shows
+  ppv: ppvs
   year: years
-  episode: episodes

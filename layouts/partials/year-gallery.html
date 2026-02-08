@@ -1,0 +1,47 @@
+<h1>{{ .Title }}</h1>
+
+{{ $termPages := .Pages.ByDate.Reverse }}
+
+{{/* Build a sorted list of unique years from the pages' years param */}}
+{{ $scratch := newScratch }}
+{{ $scratch.Set "years" slice }}
+{{ range $termPages }}
+  {{ range .Params.years }}
+    {{ if not (in ($scratch.Get "years") .) }}
+      {{ $scratch.Add "years" (slice .) }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+{{ $years := sort ($scratch.Get "years") "value" "desc" }}
+
+{{ range $years }}
+  {{ $year := . }}
+  {{/* Filter pages that belong to this year */}}
+  {{ $pages := where $termPages "Params.years" "intersect" (slice $year) }}
+  <div class="year-section">
+    <button class="year-heading" aria-expanded="false" onclick="this.setAttribute('aria-expanded', this.getAttribute('aria-expanded') === 'true' ? 'false' : 'true'); this.nextElementSibling.classList.toggle('open')">
+      {{ $year }}
+      <span class="year-count">{{ len $pages }}</span>
+      <span class="year-toggle" aria-hidden="true"></span>
+    </button>
+    <div class="year-episodes">
+      <div class="gallery">
+        {{ range $pages }}
+        {{ $img := .Resources.GetMatch "frame.*" }}
+        {{ $alt := .RawContent | plainify | strings.TrimSpace }}
+        <div class="gallery-card">
+          <a href="{{ .RelPermalink }}">
+            {{ with $img }}
+              <img src="{{ .RelPermalink }}" alt="{{ $alt }}" loading="lazy">
+            {{ end }}
+            <div class="card-label">
+              {{ .Title }}
+              <span class="timestamp">{{ .Params.timestamp }}</span>
+            </div>
+          </a>
+        </div>
+        {{ end }}
+      </div>
+    </div>
+  </div>
+{{ end }}

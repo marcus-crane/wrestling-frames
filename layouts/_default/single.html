@@ -21,19 +21,20 @@
     <dd>{{ range $i, $s := . }}{{ if $i }}, {{ end }}<a href="{{ printf "/shows/%s/" ($s | urlize) }}">{{ $s }}</a>{{ end }}</dd>
     {{ end }}
 
+    {{ with .Params.ppvs }}
+    <dt>PPV</dt>
+    <dd>{{ range $i, $p := . }}{{ if $i }}, {{ end }}<a href="{{ printf "/ppvs/%s/" ($p | urlize) }}">{{ $p }}</a>{{ end }}</dd>
+    {{ end }}
+
     {{ with .Params.years }}
     <dt>Year</dt>
     <dd>{{ range $i, $y := . }}{{ if $i }}, {{ end }}<a href="{{ printf "/years/%s/" ($y | urlize) }}">{{ $y }}</a>{{ end }}</dd>
     {{ end }}
 
-    {{ with .Params.episodes }}
-    <dt>Episode</dt>
-    <dd>{{ range $i, $e := . }}{{ if $i }}, {{ end }}<a href="{{ printf "/episodes/%s/" ($e | urlize) }}">{{ $e }}</a>{{ end }}</dd>
+    {{ with $alt }}
+    <dt>Alt Text</dt>
+    <dd class="alt-text">{{ . }}</dd>
     {{ end }}
   </dl>
-
-  {{ with $alt }}
-  <div class="alt-text">{{ . }}</div>
-  {{ end }}
 </div>
 {{ end }}

@@ -1,27 +1,31 @@
 {{ define "main" }}
-<h1>{{ .Site.Title }}</h1>
-
 <div class="filter-bar">
   <input type="text" class="filter-search" placeholder="Search by event name..." id="frame-search">
 </div>
 
-<div class="gallery">
-  {{ range where .Site.RegularPages.ByDate.Reverse "Section" "frames" }}
-  {{ $img := .Resources.GetMatch "frame.*" }}
-  {{ $alt := .RawContent | plainify | strings.TrimSpace }}
-  <div class="gallery-card" data-title="{{ .Title | lower }}">
-    <a href="{{ .RelPermalink }}">
-      {{ with $img }}
-        <img src="{{ .RelPermalink }}" alt="{{ $alt }}" loading="lazy">
-      {{ end }}
-      <div class="card-label">
-        {{ .Title }}
-        <span class="timestamp">{{ .Params.timestamp }}</span>
-      </div>
-    </a>
+{{ $frames := where .Site.RegularPages "Section" "frames" }}
+{{ range $frames.GroupByDate "January 2, 2006" }}
+<div class="day-section">
+  <h2 class="day-heading">{{ .Key }}</h2>
+  <div class="gallery">
+    {{ range .Pages }}
+    {{ $img := .Resources.GetMatch "frame.*" }}
+    {{ $alt := .RawContent | plainify | strings.TrimSpace }}
+    <div class="gallery-card" data-title="{{ .Title | lower }}">
+      <a href="{{ .RelPermalink }}">
+        {{ with $img }}
+          <img src="{{ .RelPermalink }}" alt="{{ $alt }}" loading="lazy">
+        {{ end }}
+        <div class="card-label">
+          {{ .Title }}
+          <span class="timestamp">{{ .Params.timestamp }}</span>
+        </div>
+      </a>
+    </div>
+    {{ end }}
   </div>
-  {{ end }}
 </div>
+{{ end }}
 
 <script>
   const searchInput = document.getElementById('frame-search');
@@ -30,6 +34,10 @@
     document.querySelectorAll('.gallery-card').forEach(card => {
       const { title } = card.dataset;
       card.style.display = title.includes(query) ? '' : 'none';
+    });
+    document.querySelectorAll('.day-section').forEach(section => {
+      const visible = section.querySelectorAll('.gallery-card:not([style*="display: none"])');
+      section.style.display = visible.length ? '' : 'none';
     });
   });
 </script>
