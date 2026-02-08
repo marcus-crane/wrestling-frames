@@ -1,0 +1,6 @@
+baseURL: ""
+title: "Wrestling Frames"
+taxonomies:
+  show: shows
+  year: years
+  episode: episodes

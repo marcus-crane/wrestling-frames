@@ -1,0 +1,39 @@
+{{ define "main" }}
+{{ $img := .Resources.GetMatch "frame.*" }}
+{{ $alt := .RawContent | plainify | strings.TrimSpace }}
+
+<h1>{{ .Title }}</h1>
+
+<div class="frame-single">
+  {{ with $img }}
+    <img src="{{ .RelPermalink }}" alt="{{ $alt }}">
+  {{ end }}
+
+  <dl class="frame-meta">
+    <dt>Timestamp</dt>
+    <dd>{{ .Params.timestamp }}</dd>
+
+    <dt>Date</dt>
+    <dd>{{ .Date.Format "January 2, 2006" }}</dd>
+
+    {{ with .Params.shows }}
+    <dt>Show</dt>
+    <dd>{{ range $i, $s := . }}{{ if $i }}, {{ end }}<a href="{{ printf "/shows/%s/" ($s | urlize) }}">{{ $s }}</a>{{ end }}</dd>
+    {{ end }}
+
+    {{ with .Params.years }}
+    <dt>Year</dt>
+    <dd>{{ range $i, $y := . }}{{ if $i }}, {{ end }}<a href="{{ printf "/years/%s/" ($y | urlize) }}">{{ $y }}</a>{{ end }}</dd>
+    {{ end }}
+
+    {{ with .Params.episodes }}
+    <dt>Episode</dt>
+    <dd>{{ range $i, $e := . }}{{ if $i }}, {{ end }}<a href="{{ printf "/episodes/%s/" ($e | urlize) }}">{{ $e }}</a>{{ end }}</dd>
+    {{ end }}
+  </dl>
+
+  {{ with $alt }}
+  <div class="alt-text">{{ . }}</div>
+  {{ end }}
+</div>
+{{ end }}

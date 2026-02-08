@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ if not .IsHome }}{{ .Title }} — {{ end }}{{ .Site.Title }}</title>
+  {{ with resources.Get "css/style.css" }}
+    <style>{{ .Content | safeCSS }}</style>
+  {{ end }}
+</head>
+<body>
+  <header>
+    <a href="/" class="site-title">{{ .Site.Title }}</a>
+    <nav>
+      <a href="/">Gallery</a>
+      <a href="/shows/">Shows</a>
+      <a href="/years/">Years</a>
+      <a href="/episodes/">Episodes</a>
+    </nav>
+  </header>
+  <main>
+    {{ block "main" . }}{{ end }}
+  </main>
+  <footer>
+    {{ .Site.Title }}
+  </footer>
+</body>
+</html>

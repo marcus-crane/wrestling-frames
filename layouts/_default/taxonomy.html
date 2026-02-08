@@ -1,0 +1,21 @@
+{{ define "main" }}
+<h1>{{ .Title }}</h1>
+
+<div class="gallery">
+  {{ range .Pages.ByDate.Reverse }}
+  {{ $img := .Resources.GetMatch "frame.*" }}
+  {{ $alt := .RawContent | plainify | strings.TrimSpace }}
+  <div class="gallery-card">
+    <a href="{{ .RelPermalink }}">
+      {{ with $img }}
+        <img src="{{ .RelPermalink }}" alt="{{ $alt }}" loading="lazy">
+      {{ end }}
+      <div class="card-label">
+        {{ .Title }}
+        <span class="timestamp">{{ .Params.timestamp }}</span>
+      </div>
+    </a>
+  </div>
+  {{ end }}
+</div>
+{{ end }}
