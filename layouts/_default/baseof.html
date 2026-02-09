@@ -4,6 +4,16 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ if not .IsHome }}{{ .Title }} — {{ end }}{{ .Site.Title }}</title>
+  {{ if .Params.timestamp }}
+    {{ $img := .Resources.GetMatch "frame.*" }}
+    <meta property="og:title" content="{{ .Title }} — {{ .Site.Title }}">
+    <meta property="og:description" content="This frame appears at {{ .Params.timestamp }}">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="{{ .Permalink }}">
+    {{ with $img }}
+    <meta property="og:image" content="{{ .Permalink }}">
+    {{ end }}
+  {{ end }}
   <script>
     (function() {
       var t = localStorage.getItem('theme');
