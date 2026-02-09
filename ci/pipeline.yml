@@ -64,9 +64,10 @@ jobs:
                   --ftp-user=$STORAGE_ZONE \
                   --ftp-pass=$(rclone obscure "$STORAGE_PASSWORD") \
                   --ftp-concurrency 1 \
-                  --no-check-upload \
+                  --no-check-dest \
                   --inplace \
-                  --verbose
+                  --verbose \
+                  --stats 0
                 curl -sf -X POST \
                   -H "AccessKey: $API_KEY" \
                   -H "Content-Length: 0" \
