@@ -133,7 +133,8 @@ jobs:
                 echo "=== Purging CDN cache ==="
                 purge_response=$(curl -s -w "\nHTTP_CODE:%{http_code}" -X POST \
                   -H "AccessKey: $API_KEY" \
-                  -H "Content-Length: 0" \
+                  -H "Content-Type: application/json" \
+                  -d '{}' \
                   "https://api.bunny.net/pullzone/$PULL_ZONE_ID/purgeCache")
                 purge_code=$(echo "$purge_response" | grep "HTTP_CODE:" | cut -d: -f2)
                 if [ "$purge_code" -ge 200 ] && [ "$purge_code" -lt 300 ]; then
