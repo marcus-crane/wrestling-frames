@@ -58,16 +58,81 @@ jobs:
             args:
               - -ec
               - |
-                apk add --no-cache --quiet rclone curl
-                rclone sync site/ :ftp:/ \
-                  --ftp-host=la.storage.bunnycdn.com \
-                  --ftp-user=$STORAGE_ZONE \
-                  --ftp-pass=$(rclone obscure "$STORAGE_PASSWORD") \
-                  --ftp-concurrency 1 \
-                  --inplace \
-                  --verbose \
-                  --stats 0
+                apk add --no-cache --quiet curl jq coreutils
+
+                ENDPOINT="https://la.storage.bunnycdn.com"
+
+                export ENDPOINT STORAGE_ZONE STORAGE_PASSWORD
+
+                echo "=== Uploading files ==="
+                find site/ -type f | xargs -P 10 -I {} sh -c '
+                  file="$1"
+                  remote_path="${file#site/}"
+                  checksum=$(sha256sum "$file" | cut -d" " -f1)
+                  attempt=0
+                  while [ "$attempt" -lt 3 ]; do
+                    if curl -sf -X PUT \
+                      -H "AccessKey: $STORAGE_PASSWORD" \
+                      -H "Checksum: $checksum" \
+                      -H "Content-Type: application/octet-stream" \
+                      --data-binary @"$file" \
+                      "$ENDPOINT/$STORAGE_ZONE/$remote_path"; then
+                      echo "Uploaded: $remote_path"
+                      exit 0
+                    fi
+                    attempt=$((attempt + 1))
+                    echo "Retry $attempt for $remote_path"
+                    sleep $((attempt * 2))
+                  done
+                  echo "FAILED: $remote_path"
+                  exit 1
+                ' _ {}
+
+                list_remote() {
+                  local dir_path="$1"
+                  local response
+                  response=$(curl -sf \
+                    -H "AccessKey: $STORAGE_PASSWORD" \
+                    "$ENDPOINT/$STORAGE_ZONE/$dir_path/")
+                  echo "$response" | jq -r '.[] | if .IsDirectory then .ObjectName + "/" else .ObjectName end' | while read -r entry; do
+                    if printf '%s' "$entry" | grep -q '/$'; then
+                      subdir="${entry%/}"
+                      if [ -z "$dir_path" ]; then
+                        list_remote "$subdir"
+                      else
+                        list_remote "$dir_path/$subdir"
+                      fi
+                    else
+                      if [ -z "$dir_path" ]; then
+                        echo "$entry"
+                      else
+                        echo "$dir_path/$entry"
+                      fi
+                    fi
+                  done
+                }
+
+                echo "=== Listing remote files ==="
+                remote_files=$(list_remote "")
+                echo "$remote_files" | head -20
+                remote_count=$(echo "$remote_files" | grep -c . || true)
+                echo "Total remote files: $remote_count"
+
+                echo "=== Deleting stale files ==="
+                local_files=$(cd site && find . -type f | sed 's|^\./||')
+                echo "$remote_files" | while read -r remote; do
+                  [ -z "$remote" ] && continue
+                  if ! echo "$local_files" | grep -qxF "$remote"; then
+                    echo "Deleting: $remote"
+                    curl -sf -X DELETE \
+                      -H "AccessKey: $STORAGE_PASSWORD" \
+                      "$ENDPOINT/$STORAGE_ZONE/$remote" || echo "Failed to delete: $remote"
+                  fi
+                done
+
+                echo "=== Purging CDN cache ==="
                 curl -sf -X POST \
                   -H "AccessKey: $API_KEY" \
                   -H "Content-Length: 0" \
                   "https://api.bunny.net/pullzone/$PULL_ZONE_ID/purgeCache"
+                echo "Deploy complete!"
