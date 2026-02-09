@@ -63,6 +63,9 @@ jobs:
                   --ftp-host=la.storage.bunnycdn.com \
                   --ftp-user=$STORAGE_ZONE \
                   --ftp-pass=$(rclone obscure "$STORAGE_PASSWORD") \
+                  --ftp-concurrency 1 \
+                  --no-check-upload \
+                  --inplace \
                   --verbose
                 curl -sf -X POST \
                   -H "AccessKey: $API_KEY" \
