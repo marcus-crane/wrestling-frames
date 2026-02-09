@@ -1,0 +1,71 @@
+resources:
+  - name: repo
+    type: git
+    icon: github
+    check_every: 24h
+    webhook_token: ((webhook-token))
+    source:
+      uri: https://github.com/marcus-crane/wrestling-frames
+      branch: main
+
+jobs:
+  - name: set-pipeline
+    public: true
+    plan:
+      - get: repo
+        trigger: true
+      - set_pipeline: self
+        file: repo/ci/pipeline.yml
+
+  - name: deploy
+    public: true
+    plan:
+      - get: repo
+        trigger: true
+        passed: [set-pipeline]
+      - task: build-site
+        config:
+          platform: linux
+          image_resource:
+            type: registry-image
+            source: { repository: hugomods/hugo, tag: ext }
+          inputs:
+            - name: repo
+          outputs:
+            - name: site
+          run:
+            path: sh
+            args:
+              - -exc
+              - |
+                cd repo
+                hugo
+                cp -r public/* ../site/
+      - task: deploy-to-bunny
+        config:
+          platform: linux
+          image_resource:
+            type: registry-image
+            source: { repository: alpine, tag: latest }
+          inputs:
+            - name: site
+          params:
+            STORAGE_ZONE: wrestlingframes
+            STORAGE_PASSWORD: ((bunny-storage-password))
+            API_KEY: ((bunny-api-key))
+            PULL_ZONE_ID: ((bunny-pull-zone-id))
+          run:
+            path: sh
+            args:
+              - -exc
+              - |
+                apk add --no-cache --quiet rclone curl
+                rclone sync site/ :ftp:/ \
+                  --ftp-host=storage.bunnycdn.com \
+                  --ftp-user=$STORAGE_ZONE \
+                  --ftp-pass=$(rclone obscure "$STORAGE_PASSWORD") \
+                  --verbose
+                curl -sf -X POST \
+                  -H "AccessKey: $API_KEY" \
+                  -H "Content-Length: 0" \
+                  "https://api.bunny.net/pullzone/$PULL_ZONE_ID/purgeCache"
