@@ -56,11 +56,11 @@ jobs:
           run:
             path: sh
             args:
-              - -exc
+              - -ec
               - |
                 apk add --no-cache --quiet rclone curl
                 rclone sync site/ :ftp:/ \
-                  --ftp-host=storage.bunnycdn.com \
+                  --ftp-host=la.storage.bunnycdn.com \
                   --ftp-user=$STORAGE_ZONE \
                   --ftp-pass=$(rclone obscure "$STORAGE_PASSWORD") \
                   --verbose
