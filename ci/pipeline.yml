@@ -131,8 +131,15 @@ jobs:
                 done
 
                 echo "=== Purging CDN cache ==="
-                curl -sf -X POST \
+                purge_response=$(curl -s -w "\nHTTP_CODE:%{http_code}" -X POST \
                   -H "AccessKey: $API_KEY" \
                   -H "Content-Length: 0" \
-                  "https://api.bunny.net/pullzone/$PULL_ZONE_ID/purgeCache"
+                  "https://api.bunny.net/pullzone/$PULL_ZONE_ID/purgeCache")
+                purge_code=$(echo "$purge_response" | grep "HTTP_CODE:" | cut -d: -f2)
+                if [ "$purge_code" -ge 200 ] && [ "$purge_code" -lt 300 ]; then
+                  echo "Cache purged successfully"
+                else
+                  echo "WARNING: Cache purge failed (HTTP $purge_code)"
+                  echo "$purge_response"
+                fi
                 echo "Deploy complete!"
