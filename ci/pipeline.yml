@@ -22,13 +22,12 @@ jobs:
     plan:
       - get: repo
         trigger: true
-        passed: [set-pipeline]
       - task: build-site
         config:
           platform: linux
           image_resource:
             type: registry-image
-            source: { repository: hugomods/hugo, tag: ext }
+            source: { repository: hugomods/hugo, tag: exts }
           inputs:
             - name: repo
           outputs:
