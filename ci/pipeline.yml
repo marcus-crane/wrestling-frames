@@ -64,7 +64,6 @@ jobs:
                   --ftp-user=$STORAGE_ZONE \
                   --ftp-pass=$(rclone obscure "$STORAGE_PASSWORD") \
                   --ftp-concurrency 1 \
-                  --no-check-dest \
                   --inplace \
                   --verbose \
                   --stats 0
