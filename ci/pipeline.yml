@@ -52,7 +52,6 @@ jobs:
             STORAGE_ZONE: wrestlingframes
             STORAGE_PASSWORD: ((bunny-storage-password))
             API_KEY: ((bunny-api-key))
-            PULL_ZONE_ID: ((bunny-pull-zone-id))
           run:
             path: sh
             args:
@@ -131,6 +130,27 @@ jobs:
                 done
 
                 echo "=== Purging CDN cache ==="
+                echo "Looking up pull zone ID for storage zone: $STORAGE_ZONE"
+                lookup_response=$(curl -s -w "\nHTTP_CODE:%{http_code}" \
+                  -H "AccessKey: $API_KEY" \
+                  "https://api.bunny.net/pullzone?search=$STORAGE_ZONE")
+                lookup_code=$(echo "$lookup_response" | grep "HTTP_CODE:" | cut -d: -f2)
+                lookup_body=$(echo "$lookup_response" | sed '/HTTP_CODE:/d')
+
+                if [ "$lookup_code" -lt 200 ] || [ "$lookup_code" -ge 300 ]; then
+                  echo "ERROR: Failed to look up pull zone (HTTP $lookup_code)"
+                  echo "$lookup_body"
+                  exit 1
+                fi
+
+                PULL_ZONE_ID=$(echo "$lookup_body" | jq -r --arg name "$STORAGE_ZONE" '.Items[] | select(.Name == $name) | .Id')
+
+                if [ -z "$PULL_ZONE_ID" ]; then
+                  echo "ERROR: No pull zone found matching name '$STORAGE_ZONE'"
+                  exit 1
+                fi
+
+                echo "Found pull zone ID: $PULL_ZONE_ID"
                 purge_response=$(curl -s -w "\nHTTP_CODE:%{http_code}" -X POST \
                   -H "AccessKey: $API_KEY" \
                   -H "Content-Type: application/json" \
