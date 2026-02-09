@@ -6,7 +6,7 @@ source: "tv"
 shows:
   - "WWE SmackDown"
 years:
-  - "2026"
+  - "2004"
 episodes:
   - "WWE SmackDown (April 29, 2004)"
 ---

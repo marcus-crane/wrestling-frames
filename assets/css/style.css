@@ -108,8 +108,28 @@ nav a:hover {
   color: var(--text);
 }
 
-.theme-toggle {
+.header-actions {
   margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.rss-link {
+  color: var(--muted);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.rss-link:hover {
+  color: var(--text);
+  background: var(--overlay);
+  text-decoration: none;
+}
+
+.theme-toggle {
   background: none;
   border: none;
   color: var(--muted);
@@ -263,6 +283,33 @@ h1 {
   color: var(--subtle);
   display: block;
   margin-top: 0.25rem;
+}
+
+.year-gallery-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.year-gallery-header h1 {
+  margin-bottom: 0;
+}
+
+.collapse-all {
+  background: none;
+  border: 1px solid var(--overlay);
+  color: var(--muted);
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-family: inherit;
+}
+
+.collapse-all:hover {
+  color: var(--text);
+  background: var(--overlay);
 }
 
 /* Year sections (show taxonomy) */

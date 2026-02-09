@@ -1,6 +1,9 @@
-baseURL: ""
+baseURL: "https://wrestlingframes.utf9k.net"
 title: "Wrestling Frames"
 buildFuture: true
+outputFormats:
+  RSS:
+    baseName: rss
 taxonomies:
   show: shows
   ppv: ppvs

@@ -6,7 +6,7 @@ source: "tv"
 shows:
   - "WWE SmackDown"
 years:
-  - "2026"
+  - "2020"
 episodes:
   - "WWE SmackDown (October 2, 2020)"
 ---

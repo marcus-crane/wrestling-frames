@@ -3,10 +3,10 @@ title: "WrestleMania XXVIII (2012)"
 date: 2026-02-09T08:41:07Z
 timestamp: "1:38:53"
 source: "ppv"
-shows:
+ppvs:
   - "WrestleMania XXVIII"
 years:
-  - "2026"
+  - "2012"
 episodes:
   - "WrestleMania XXVIII (2012)"
 ---

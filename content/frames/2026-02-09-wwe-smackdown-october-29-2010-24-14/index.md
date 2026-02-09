@@ -6,7 +6,7 @@ source: "tv"
 shows:
   - "WWE SmackDown"
 years:
-  - "2026"
+  - "2010"
 episodes:
   - "WWE SmackDown (October 29, 2010)"
 ---

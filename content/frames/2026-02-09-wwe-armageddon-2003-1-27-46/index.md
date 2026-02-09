@@ -3,10 +3,10 @@ title: "WWE Armageddon (2003)"
 date: 2026-02-09T14:44:35Z
 timestamp: "1:27:46"
 source: "ppv"
-shows:
+ppvs:
   - "WWE Armageddon"
 years:
-  - "2026"
+  - "2003"
 episodes:
   - "WWE Armageddon (2003)"
 ---

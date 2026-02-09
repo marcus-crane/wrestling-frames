@@ -1,12 +1,35 @@
 {{ define "main" }}
-<h1>{{ .Title }}</h1>
+<div class="year-gallery-header">
+  <h1>{{ .Title }}</h1>
+  <button class="collapse-all" onclick="var open = this.textContent.trim() === 'Collapse All'; document.querySelectorAll('.year-heading').forEach(function(h) { h.setAttribute('aria-expanded', open ? 'false' : 'true'); }); document.querySelectorAll('.year-episodes').forEach(function(e) { open ? e.classList.remove('open') : e.classList.add('open'); }); this.textContent = open ? 'Expand All' : 'Collapse All';">Collapse All</button>
+</div>
 
-<ul class="terms-list">
-  {{ range .Pages.Reverse }}
-  <li>
-    <a href="{{ .RelPermalink }}">{{ .Title }}</a>
-    <span class="count">({{ len .Pages }})</span>
-  </li>
-  {{ end }}
-</ul>
+{{ range .Pages.ByTitle.Reverse }}
+  <div class="year-section">
+    <button class="year-heading" aria-expanded="true" onclick="this.setAttribute('aria-expanded', this.getAttribute('aria-expanded') === 'true' ? 'false' : 'true'); this.nextElementSibling.classList.toggle('open')">
+      {{ .Title }}
+      <span class="year-count">{{ len .Pages }}</span>
+      <span class="year-toggle" aria-hidden="true"></span>
+    </button>
+    <div class="year-episodes open">
+      <div class="gallery">
+        {{ range .Pages.ByDate.Reverse }}
+        {{ $img := .Resources.GetMatch "frame.*" }}
+        {{ $alt := .RawContent | plainify | strings.TrimSpace }}
+        <div class="gallery-card">
+          <a href="{{ .RelPermalink }}">
+            {{ with $img }}
+              <img src="{{ .RelPermalink }}" alt="{{ $alt }}" loading="lazy">
+            {{ end }}
+            <div class="card-label">
+              {{ .Title }}
+              <span class="timestamp">{{ .Params.timestamp }}</span>
+            </div>
+          </a>
+        </div>
+        {{ end }}
+      </div>
+    </div>
+  </div>
+{{ end }}
 {{ end }}

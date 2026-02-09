@@ -3,10 +3,10 @@ title: "WWE Backlash (2004)"
 date: 2026-02-09T18:46:54Z
 timestamp: "0:15"
 source: "ppv"
-shows:
+ppvs:
   - "WWE Backlash"
 years:
-  - "2026"
+  - "2004"
 episodes:
   - "WWE Backlash (2004)"
 ---

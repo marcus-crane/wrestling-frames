@@ -3,10 +3,10 @@ title: "WWE No Mercy (2002)"
 date: 2026-02-09T16:45:04Z
 timestamp: "2:21:37"
 source: "ppv"
-shows:
+ppvs:
   - "WWE No Mercy"
 years:
-  - "2026"
+  - "2002"
 episodes:
   - "WWE No Mercy (2002)"
 ---

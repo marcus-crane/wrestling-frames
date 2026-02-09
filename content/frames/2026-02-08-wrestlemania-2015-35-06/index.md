@@ -3,10 +3,10 @@ title: "WrestleMania (2015)"
 date: 2026-02-08T11:39:02Z
 timestamp: "35:06"
 source: "ppv"
-shows:
+ppvs:
   - "WrestleMania"
 years:
-  - "2026"
+  - "2015"
 episodes:
   - "WrestleMania (2015)"
 ---

@@ -1,4 +1,7 @@
-<h1>{{ .Title }}</h1>
+<div class="year-gallery-header">
+  <h1>{{ .Title }}</h1>
+  <button class="collapse-all" onclick="var open = this.textContent.trim() === 'Collapse All'; document.querySelectorAll('.year-heading').forEach(function(h) { h.setAttribute('aria-expanded', open ? 'false' : 'true'); }); document.querySelectorAll('.year-episodes').forEach(function(e) { open ? e.classList.remove('open') : e.classList.add('open'); }); this.textContent = open ? 'Expand All' : 'Collapse All';">Collapse All</button>
+</div>
 
 {{ $termPages := .Pages.ByDate.Reverse }}
 
@@ -19,12 +22,12 @@
   {{/* Filter pages that belong to this year */}}
   {{ $pages := where $termPages "Params.years" "intersect" (slice $year) }}
   <div class="year-section">
-    <button class="year-heading" aria-expanded="false" onclick="this.setAttribute('aria-expanded', this.getAttribute('aria-expanded') === 'true' ? 'false' : 'true'); this.nextElementSibling.classList.toggle('open')">
+    <button class="year-heading" aria-expanded="true" onclick="this.setAttribute('aria-expanded', this.getAttribute('aria-expanded') === 'true' ? 'false' : 'true'); this.nextElementSibling.classList.toggle('open')">
       {{ $year }}
       <span class="year-count">{{ len $pages }}</span>
       <span class="year-toggle" aria-hidden="true"></span>
     </button>
-    <div class="year-episodes">
+    <div class="year-episodes open">
       <div class="gallery">
         {{ range $pages }}
         {{ $img := .Resources.GetMatch "frame.*" }}

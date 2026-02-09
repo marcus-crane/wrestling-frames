@@ -6,7 +6,7 @@ source: "tv"
 shows:
   - "WWE SmackDown"
 years:
-  - "2026"
+  - "2006"
 episodes:
   - "WWE SmackDown (March 24, 2006)"
 ---

@@ -6,7 +6,7 @@ source: "tv"
 shows:
   - "WWE SmackDown"
 years:
-  - "2026"
+  - "2000"
 episodes:
   - "WWE SmackDown (February 17, 2000)"
 ---
